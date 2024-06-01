@@ -24,3 +24,11 @@ def test_predict_negative():
     json_data = response.json()
     assert response.status_code == 200
     assert json_data['label'] == 'NEGATIVE'
+
+def test_predict_invalid_input():
+    response = client.post("/predict/", json={"invalid_key": "Invalid text"})
+    assert response.status_code == 422
+    # Проверяем, что код ответа - 422 (непроцессированная сущность)
+    assert response.json() == {"detail": [{"loc": ["body", "text"],
+                                           "msg": "field required",
+                                           "type": "value_error.missing"}]}
